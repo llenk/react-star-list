@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Introduction from '../Introduction/Introduction';
 import StarList from '../StarList/StarList';
 import StarForm from '../StarForm/StarForm';
@@ -22,6 +23,7 @@ class App extends Component {
         { name: 'Kochab', rad: '42 suns', },
         { name: 'Hadar', rad: '8.6 suns, I guess,', },
       ],
+      planets: [],
     };
     // this.handleChange = this.handleChange.bind(this);
   }
@@ -46,12 +48,46 @@ class App extends Component {
     });
   }
 
+  componentDidMount = () => {
+    this.requestPlanets(1);
+  }
+
+  requestPlanets = (page) => {
+    axios({
+      method: 'GET',
+      url: 'https://swapi.co/api/planets/?page='+page+'&format=json',
+    }).then((response) => {
+      const planets = response.data.results;
+      this.addPlanets(planets);
+      if(response.data.next) {
+        this.requestPlanets(page+1);
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  addPlanets = (planets) => {
+    for (let i = 0; i < planets.length; i++) {
+      this.setState({
+        planets: [...this.state.planets, planets[i].name],
+      });
+      // console.log(planets[i].name);
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        <Introduction newStar={this.state.newStar}/>
+        <Introduction newStar={this.state.newStar} />
         <StarForm newStar={this.state.newStar} handleChangeFor={this.handleChangeFor} handleSubmit={this.handleSubmit} />
         <StarList starList={this.state.starData} />
+        <h1>
+          STAR WARS PLANETS YOU BET YOUR LIFE
+          </h1>
+        <ul>
+          {this.state.planets.map(pl => <li key={pl}>{pl}</li>)}
+        </ul>
       </div>
     );
   }
