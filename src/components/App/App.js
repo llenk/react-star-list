@@ -3,6 +3,7 @@ import axios from 'axios';
 import Introduction from '../Introduction/Introduction';
 import StarList from '../StarList/StarList';
 import StarForm from '../StarForm/StarForm';
+import PlanetList from '../PlanetList/PlanetList';
 
 const emptyStar = {
   name: '',
@@ -82,12 +83,7 @@ class App extends Component {
         <Introduction newStar={this.state.newStar} />
         <StarForm newStar={this.state.newStar} handleChangeFor={this.handleChangeFor} handleSubmit={this.handleSubmit} />
         <StarList starList={this.state.starData} />
-        <h1>
-          STAR WARS PLANETS YOU BET YOUR LIFE
-          </h1>
-        <ul>
-          {this.state.planets.map(pl => <li key={pl}>{pl}</li>)}
-        </ul>
+        <PlanetList planets={this.state.planets} />
       </div>
     );
   }
